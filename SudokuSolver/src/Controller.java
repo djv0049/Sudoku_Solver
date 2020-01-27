@@ -9,9 +9,25 @@ public class Controller {
 	//win.createAndShowGUI();
 	
 	Sudoku S = new Sudoku();
+	
 	S.setupBoxes();
 	S.printNumbers();
-	System.out.print(S.squares[2][5]);
+	boolean changeMade = false;
+	do {
+		changeMade = false;
+		for(int r = 0; r < 9; r++) {
+			for(int i = 0; i < 9 ; i++) {
+				if(S.sudoku[r][i] == 0) {
+					changeMade = S.findAvailableNumbers(r, i);
+				}
+				
+				
+			}
+		}
+		System.out.print(1);
+		S.printNumbers();
+	}while(changeMade);
+	System.out.print("");
 	
 	
 }
