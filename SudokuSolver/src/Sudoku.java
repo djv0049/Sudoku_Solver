@@ -8,9 +8,9 @@ public class Sudoku {
 		int sudoku[][] = new int[9][9];
 		int squares[][] = new int[9][9];
 		public Sudoku() {
-			
-				
-			int example[][] =
+			/*
+				int example[][] =
+
 				{ { 0, 0, 4,   0, 0, 0,   0, 6, 7 },
 	              { 3, 0, 0,   4, 7, 0,   0, 0, 5 },
 	              { 1, 5, 0,   8, 2, 0,   0, 0, 3 },
@@ -22,8 +22,24 @@ public class Sudoku {
 	              { 7, 0, 0,   0, 8, 0,   0, 4, 6 },
 	              { 6, 0, 0,   0, 1, 2,   0, 0, 0 },
 	              { 9, 3, 0,   0, 0, 0,   7, 1, 0 } };
-			//this.sudoku = example;
-			addNumbers();
+			this.sudoku = example;
+			*/
+			int example[][] =
+
+				{ { 0, 0, 4,   0, 0, 0,   0, 6, 7 },
+	              { 3, 0, 0,   4, 7, 0,   0, 0, 5 },
+	              { 1, 5, 0,   8, 2, 0,   0, 0, 3 },
+	                    
+	              { 0, 0, 6,   0, 0, 0,   0, 3, 1 },
+	              { 8, 0, 2,   1, 0, 5,   6, 0, 4 },
+	              { 4, 1, 0,   0, 0, 0,   9, 0, 0 },
+	                  
+	              { 7, 0, 0,   0, 8, 0,   0, 4, 6 },
+	              { 0, 0, 0,   0, 1, 0,   0, 0, 0 },
+	              { 9, 3, 0,   0, 0, 0,   7, 1, 0 } };
+			this.sudoku = example;
+			
+			//addNumbers();
 		}
 		// in all places: //
 		// r == row of sudoku
@@ -65,9 +81,6 @@ public class Sudoku {
 		}
 		public void setupBoxes() {
 			int[][] rows = this.sudoku;
-			int[][] boxes = new int[9][9];
-			int boxNum = 0;
-	        int boxIndex = 0;
 	        for(int r = 0; r< rows.length; r++){
 	            for(int i = 0; i < rows[r].length; i++){
 	                 int[] result = getboxnum(r, i );
@@ -76,7 +89,7 @@ public class Sudoku {
 	            }
 	        }
 		}
-		public static int[] getboxnum(int r, int i) {
+		public int[] getboxnum(int r, int i) {
            int b = 0;
            if(r < 3){
                    b += 0;
@@ -92,6 +105,32 @@ public class Sudoku {
                int[] result = {boxnum,boxindex};
                return result  ;
         }
+		public int[] getRIfromBox(int bn, int bi) {
+			int r = 0;
+			int i = 0;
+			if (bn < 3) {
+				r += 0;
+			}
+			else if (bn < 6) {
+				r += 3;
+			}
+			else if(bn < 9) {
+				r += 6;
+			}
+			if(bi < 3) {
+				i += 0;
+			}
+			else if(bi < 6) {
+				r += 1;
+			}
+			else if(bi < 9) {
+				r +=2;
+			}
+			i += bi%3;
+			i += bn%3*3;
+			int[] result = {r,i};
+			return  result;
+		}
 		public void setBox(int[] i, int[] b) {
 			this.squares[b[0]] [b[1]] = this.sudoku[i[0]][ i[1]];
 		}
@@ -103,16 +142,13 @@ public class Sudoku {
 			}
 			return col;
 		}
-		public boolean findAvailableNumbers(int r, int i) {
-			int[] row = this.sudoku[r];
-			int[] col = makeCol(i);
-			int[] box = squares[getboxnum(r, i)[0]];
-			int[][] all = {row,col,box};
+		public int hasAvailableNums(int r, int i) {
+			int[][] all = makeThreeArrays(r,i);
 			ArrayList<Integer> result = findNums(all);
 			int [] smallNums = new int[9];
 			if(result.size() == 1) {
 				this.sudoku[r][i] = result.get(0);
-				return true;
+				return 1;
 			}
 			else {
 				for(i = 0; i < 9; i++) {
@@ -123,9 +159,102 @@ public class Sudoku {
 						smallNums[i] = 0;
 					}
 				}
-				return false;
+				return 0;
 			}
-			// TO DO, set up so that this will be displayed in place of the actual number
+			// TO DO, set up so that this will be displayed in place of the actual number	
+		}
+		public int isOnlyNumInLine(int r, int i, int n) {
+			//for each array from the number
+			int result = 0;
+			int listCount = 0;
+			ArrayList<Integer> lst = new ArrayList<Integer>();
+			ArrayList<ArrayList<Integer>> rowlist = new ArrayList<ArrayList<Integer>>();
+			ArrayList<ArrayList<Integer>> colslist = new ArrayList<ArrayList<Integer>>();
+			ArrayList<ArrayList<Integer>> boxlist = new ArrayList<ArrayList<Integer>>();
+			//find list of each number in a row
+			for(int t = 0; t<9;t++) {
+				if(this.sudoku[r][t] == 0) {// adds list to check through 
+					int[][] all = makeThreeArrays(r, t);
+					lst = findNums(all);
+					rowlist.add(lst);
+				}
+				else {// adds list to keep numbers in line 
+					lst.add(0); 
+					rowlist.add(lst);
+				}
+			}
+			for(ArrayList<Integer> x : rowlist) {
+				if(x.contains(n)) {
+					listCount += 1;
+				}
+			}
+			if(listCount == 1 && rowlist.get(i).contains(n)) {// ensures the only list that contains the target number, is from the square being worked from
+				this.sudoku[r][i] = n;
+				result += 1;
+			}
+			//////// *****************************  repeat of above to figure out repetition and how and where to utilize repeated code. *************************** //////////////////////////
+			for(int t = 0; t < 9; t++) {
+				if(this.sudoku[t][i] == 0) {
+					int[][] all = makeThreeArrays(r, t);
+					lst = findNums(all);
+					colslist.add(lst);
+				}
+				else {// adds list to keep numbers in line 
+					lst.add(0); 
+					colslist.add(lst);
+				}
+			}
+			for(ArrayList<Integer> x : colslist) {
+				if(x.contains(n)) {
+					listCount += 1;
+				}
+			}
+			if(listCount == 1 && colslist.get(r).contains(n)) {// ensures the only list that contains the target number, is from the square being worked from
+				this.sudoku[r][i] = n;
+				result += 1;
+			}
+	//////// *****************************  repeat of above to figure out repetition and how and where to utilize repeated code. *************************** //////////////////////////
+			for(int t = 0; t < 9; t++) {
+					int b = getboxnum(r, i)[0];
+					setupBoxes();
+					if(this.squares[b][t] == 0) {
+						int [] ri= getRIfromBox(b,t);
+						int[][] all = makeThreeArrays(r,i);
+						lst = findNums(all);
+						boxlist.add(lst);
+					}
+					else {// adds list to keep numbers in line 
+						lst.add(0); 
+						boxlist.add(lst);
+					}
+			}
+			for(ArrayList<Integer> x : boxlist) {
+				if(x.contains(n)) {
+					listCount += 1;
+				}
+			}
+			int bn = getboxnum(r, i)[1];
+			
+			if(listCount == 1 && boxlist.get(bn).contains(n)) {// ensures the only list that contains the target number, is from the square being worked from
+				this.sudoku[r][i] = n;
+				result += 1;
+			}
+			
+		
+				//make a list of lists of all the numbers that can be in each square
+				// if more than one list contains the "n", continue. 
+				// else set the 
+			
+			
+			return result;
+		}
+		
+		public int[][] makeThreeArrays(int r, int i) {
+			int[] row = this.sudoku[r];
+			int[] col = makeCol(i);
+			int[] box = squares[getboxnum(r, i)[0]];
+			int[][] all = {row,col,box};
+			return all;
 			
 		}
 		public static ArrayList<Integer> findNums(int threeArrays[][]){
@@ -153,8 +282,8 @@ public class Sudoku {
 	            }
 	        }
 	        return possible;
-	        
 	    }
+		
 		
 	}
 
