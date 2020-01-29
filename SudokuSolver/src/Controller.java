@@ -23,6 +23,16 @@ public class Controller {
 				
 				
 			}
+		}if(!changeMade) {
+			// do a thing
+			/*
+			 * for each square in the sudoku(r,i)
+			 * 	  for each number 0-9 
+			 * 	      make a list of lists that wil contain all numbers that are available in each square
+			 *        for each square in row(then col, then square)
+			 *        for 
+			 *            
+			 */
 		}
 		System.out.print(1);
 		S.printNumbers();
