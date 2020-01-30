@@ -26,17 +26,17 @@ public class Sudoku {
 			*/
 			int example[][] =
 
-				{ { 0, 0, 4,   0, 0, 0,   0, 6, 7 },
-	              { 3, 0, 0,   4, 7, 0,   0, 0, 5 },
-	              { 1, 5, 0,   8, 2, 0,   0, 0, 3 },
-	                    
-	              { 0, 0, 6,   0, 0, 0,   0, 3, 1 },
-	              { 8, 0, 2,   1, 0, 5,   6, 0, 4 },
-	              { 4, 1, 0,   0, 0, 0,   9, 0, 0 },
-	                  
-	              { 7, 0, 0,   0, 8, 0,   0, 4, 6 },
-	              { 0, 0, 0,   0, 1, 0,   0, 0, 0 },
-	              { 9, 3, 0,   0, 0, 0,   7, 1, 0 } };
+				{   {0, 0, 2,  5, 0, 0,  0, 0, 4},
+					{8, 0, 0,  6, 0, 9,  0, 5, 0},
+					{5, 0, 0,  0, 2, 0,  0, 1, 0},
+
+					{0, 0, 5,  9, 0, 0,  3, 0, 0},
+					{0, 0, 8,  3, 7, 0,  5, 0, 0},
+					{0, 6, 0,  0, 8, 0,  4, 0, 0},
+
+					{1, 5, 0,  0, 0, 0,  0, 3, 2},
+					{0, 0, 0,  0, 0, 8,  0, 4, 5},
+					{0, 0, 4,  0, 0, 3,  0, 0, 0} };
 			this.sudoku = example;
 			
 			//addNumbers();
@@ -64,20 +64,27 @@ public class Sudoku {
 		public void printNumbers() {
 			for(int r = 0; r < 9; r++) {
 				if(r == 0 || r == 3 || r == 6) {
-					System.out.print("\n__________________________________");
+					System.out.println("");
+					//System.out.print("\n__________________________________");
 				}
 				System.out.println();
 				for(int i = 0; i < 9; i++) {
-					if(i == 0 || i == 3 || i == 6) {
-						System.out.print("| ");
+					if(i == 0) {
+						System.out.print("{");
 					}
-					System.out.print(this.sudoku[r][i] + ", ");
+					if( i == 3 || i == 6) {
+						System.out.print("  ");
+					}
+					System.out.print(this.sudoku[r][i] + "");
+					if(i != 8) {
+						System.out.print(", ");
+					}
 					if(i == 8) {
-						System.out.print("|");
+						System.out.print("},");
 					}
 				}
 			}
-			System.out.println("\n__________________________________");
+			//System.out.println("\n__________________________________");
 		}
 		public void setupBoxes() {
 			int[][] rows = this.sudoku;
@@ -193,6 +200,7 @@ public class Sudoku {
 				result += 1;
 			}
 			//////// *****************************  repeat of above to figure out repetition and how and where to utilize repeated code. *************************** //////////////////////////
+			listCount = 0;
 			for(int t = 0; t < 9; t++) {
 				if(this.sudoku[t][i] == 0) {
 					int[][] all = makeThreeArrays(r, t);
@@ -214,16 +222,18 @@ public class Sudoku {
 				result += 1;
 			}
 	//////// *****************************  repeat of above to figure out repetition and how and where to utilize repeated code. *************************** //////////////////////////
+			listCount = 0;
 			for(int t = 0; t < 9; t++) {
 					int b = getboxnum(r, i)[0];
 					setupBoxes();
 					if(this.squares[b][t] == 0) {
 						int [] ri= getRIfromBox(b,t);
-						int[][] all = makeThreeArrays(r,i);
+						int[][] all = makeThreeArrays(ri[0],ri[1]);
 						lst = findNums(all);
 						boxlist.add(lst);
 					}
 					else {// adds list to keep numbers in line 
+						lst.clear();
 						lst.add(0); 
 						boxlist.add(lst);
 					}
@@ -247,6 +257,10 @@ public class Sudoku {
 			
 			
 			return result;
+		}
+		
+		public void isOnlyNum() {
+			
 		}
 		
 		public int[][] makeThreeArrays(int r, int i) {
