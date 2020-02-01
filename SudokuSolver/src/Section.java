@@ -10,5 +10,15 @@ public class Section {
 		
 		this.number = number;
 	}
-	
+	public void checkDoubles() {
+		
+	}
+	public boolean containsSquare(int n) {
+		for(Square square : allMySquares) {
+			if(square.number == n) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

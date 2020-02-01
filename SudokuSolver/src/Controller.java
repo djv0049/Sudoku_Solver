@@ -9,6 +9,7 @@ public class Controller {
 	//win.createAndShowGUI();
 	
 	Sudoku S = new Sudoku();
+	S.takeInput();
     }
 }
 	/*	

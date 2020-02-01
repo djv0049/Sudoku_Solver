@@ -60,15 +60,21 @@ public class Sudoku {
 						s.setRow(this.myRows.get(y));
 					}
 				}
-				for( int x = 0; x < 9; x++) {
-					for(int y= 0;y<9; y++) {
+				for( int y = 0; y < 9; y++) {
+					for(int x= 0;x<9; x++) {
 						if(s.x == x&&s.y == y) {
 							int box = 0;
-							if(x > 3 && x < 6) {
+							if(y < 3) {
+								box += 0;
+							}
+							else if(y < 6) {
 								box += 3;
 							}
-							else if (x > 6 && x < 9){box += 6;}
-							box += y%3;
+							else if (y < 9){
+								box += 6;
+								c++;
+							}
+							box += x/3;
 							this.myBoxes.get(box).allMySquares.add(s);
 							s.myBox = this.myBoxes.get(box);
 							
@@ -78,6 +84,28 @@ public class Sudoku {
 				
 			}
 			System.out.print(c);
+		}
+		
+		public void takeInput() {
+			int[][] input = {   {0, 0, 2,  5, 0, 0,  0, 0, 4},
+					{8, 0, 0,  6, 0, 9,  0, 5, 0},
+					{5, 0, 0,  0, 2, 0,  0, 1, 0},
+
+					{0, 0, 5,  9, 0, 0,  3, 0, 0},
+					{0, 0, 8,  3, 7, 0,  5, 0, 0},
+					{0, 6, 0,  0, 8, 0,  4, 0, 0},
+
+					{1, 5, 0,  0, 0, 0,  0, 3, 2},
+					{0, 0, 0,  0, 0, 8,  0, 4, 5},
+					{0, 0, 4,  0, 0, 3,  0, 0, 0} };
+			this.sudoku = input;
+			
+			for(int x = 0; x < 9; x++) {
+				for(Row row : this.myRows) {
+					row.allMySquares.get(x).number = this.sudoku[row.number][x];
+				}
+			}
+			System.out.print(this.allSquares.get(29).number);
 		}
 		public void updateSudoku() {
 			
