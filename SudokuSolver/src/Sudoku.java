@@ -6,8 +6,98 @@ import java.util.List;
 
 public class Sudoku {
 		int sudoku[][] = new int[9][9];
-		int squares[][] = new int[9][9];
+		ArrayList<Box> myBoxes;
+		ArrayList<Row> myRows;
+		ArrayList<Column> myColumns;
+		ArrayList<Square> allSquares;
 		public Sudoku() {
+			this.myBoxes = new ArrayList<Box>();
+			this.myRows = new ArrayList<Row>();
+			this.myColumns = new ArrayList<Column>();
+			this.allSquares = new ArrayList<Square>();
+			// make all new rows collumns, boxes and squares, then organise em
+			create();
+			makeAllSquares();
+			sortSquares();
+			
+			
+		}
+		
+		
+		public void create() {
+			for(int i = 0; i < 9; i++) {
+				Box b = new Box(i);
+				Row r = new Row(i);
+				Column c = new Column(i);
+				this.myBoxes.add(b);
+				this.myRows.add(r);
+				this.myColumns.add(c);
+			}
+		}
+		
+		public void makeAllSquares() {
+			for(int x = 0; x < 9; x++) {
+				for(int y = 0; y < 9; y++) {
+					Square s;
+					s = new Square(x,y);
+					this.allSquares.add(s);
+				}
+			}
+		}
+		public void sortSquares() {
+			int c = 0;
+			for(Square s : this.allSquares) {
+				for(int x = 0; x < 9; x++) {
+					if(s.x == x) {
+						this.myColumns.get(x).allMySquares.add(s);
+						s.setCol(this.myColumns.get(x));
+					}			
+						
+				}
+				for( int y = 0; y < 9; y++) {
+					if(s.y == y) {
+						this.myRows.get(y).allMySquares.add(s);
+						s.setRow(this.myRows.get(y));
+					}
+				}
+				for( int x = 0; x < 9; x++) {
+					for(int y= 0;y<9; y++) {
+						if(s.x == x&&s.y == y) {
+							int box = 0;
+							if(x > 3 && x < 6) {
+								box += 3;
+							}
+							else if (x > 6 && x < 9){box += 6;}
+							box += y%3;
+							this.myBoxes.get(box).allMySquares.add(s);
+							s.myBox = this.myBoxes.get(box);
+							
+						}
+					}
+				}
+				
+			}
+			System.out.print(c);
+		}
+		public void updateSudoku() {
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 			/*
 				int example[][] =
 
@@ -23,7 +113,7 @@ public class Sudoku {
 	              { 6, 0, 0,   0, 1, 2,   0, 0, 0 },
 	              { 9, 3, 0,   0, 0, 0,   7, 1, 0 } };
 			this.sudoku = example;
-			*/
+			*
 			int example[][] =
 
 				{   {0, 0, 2,  5, 0, 0,  0, 0, 4},
@@ -223,11 +313,13 @@ public class Sudoku {
 			}
 	//////// *****************************  repeat of above to figure out repetition and how and where to utilize repeated code. *************************** //////////////////////////
 			listCount = 0;
+			int[] ri = new int[2];
 			for(int t = 0; t < 9; t++) {
 					int b = getboxnum(r, i)[0];
 					setupBoxes();
 					if(this.squares[b][t] == 0) {
-						int [] ri= getRIfromBox(b,t);
+						ri= getRIfromBox(b,t);
+						
 						int[][] all = makeThreeArrays(ri[0],ri[1]);
 						lst = findNums(all);
 						boxlist.add(lst);
@@ -259,8 +351,38 @@ public class Sudoku {
 			return result;
 		}
 		
-		public void isOnlyNum() {
+		public void isOnlyNum(int r, int i, int n) {
+			ArrayList<Integer> lst = new ArrayList<Integer>();// temporary list. gets reset every run
+			ArrayList<ArrayList<Integer>> rowlist = new ArrayList<ArrayList<Integer>>();
+			ArrayList<ArrayList<Integer>> colslist = new ArrayList<ArrayList<Integer>>();
+			ArrayList<ArrayList<Integer>> boxlist = new ArrayList<ArrayList<Integer>>();
+			int listCount=0;
+			/* make lists
+			 * for each number 1-9
+			 * make a list of the squares that can contain the number
+			 * 
+			 *
 			
+			for(int t = 0; t < 9; t++) {
+				lst.clear();
+				if(this.sudoku[r][t] == 0) {// only makes a list if the square contains nothing
+					int[][] all = makeThreeArrays(r, t); // gets arrays to send to check method
+				lst = findNums(all); // returns a list of numbers that can go in that square
+					rowlist.add(lst); // adds that list to the list of lists. ---- apparently does nothing???
+				}
+				else {
+					lst.add(0);
+					rowlist.add(lst);
+				}
+			}
+			for(ArrayList<Integer> x : rowlist) {
+				if(x.contains(n)) {
+					listCount += 1;
+				}
+			}
+			if(listCount == 1) {
+				System.out.println("("+r+","+i+") = "+n);
+			}
 		}
 		
 		public int[][] makeThreeArrays(int r, int i) {
@@ -297,7 +419,7 @@ public class Sudoku {
 	        }
 	        return possible;
 	    }
-		
+	*/	
 		
 	}
 

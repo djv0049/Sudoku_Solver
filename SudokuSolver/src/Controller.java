@@ -9,7 +9,9 @@ public class Controller {
 	//win.createAndShowGUI();
 	
 	Sudoku S = new Sudoku();
-	
+    }
+}
+	/*	
 	S.setupBoxes();
 	S.printNumbers();
 	int changeMade = 0;
@@ -26,21 +28,12 @@ public class Controller {
 				}
 			}
 		}if(changeMade == 0) {
-			// do a thing
-			/*
-			 * for each square in the sudoku(r,i)
-			 * 	  for each number 0-9 
-			 *      for each array from the number (getboxnumbers(r,i)[0]) or this.sudoku[r] or makecol(i))
-			 *      
-			 *        for each square in array {
-			 *           make a list of all the numbers that can be in each square 
-			 *            
-			 */
 			for(int n = 1; n < 10; n++) {
 				for(int r = 0; r < 9; r++) {
 					for(int i = 0; i < 9; i++) {
 						if(S.sudoku[r][i] == 0) {
-							changeMade += S.isOnlyNumInLine(r,i,n);
+							//changeMade += S.isOnlyNumInLine(r,i,n);
+							S.isOnlyNum(r, i, n);
 							secindruns += 1;
 							S.setupBoxes();
 						}
@@ -61,6 +54,13 @@ public class Controller {
 	System.out.print("");
 	
 	
-}
+    }
+    public static void runNums() {
+    	
+    }
+    public static void runLines() {
+    	
+    }
 
 }
+	*/	
