@@ -87,17 +87,17 @@ public class Sudoku {
 		}
 		
 		public void takeInput() {
-			int[][] input = {   {0, 0, 2,  5, 0, 0,  0, 0, 4},
-					{8, 0, 0,  6, 0, 9,  0, 5, 0},
-					{5, 0, 0,  0, 2, 0,  0, 1, 0},
-
-					{0, 0, 5,  9, 0, 0,  3, 0, 0},
-					{0, 0, 8,  3, 7, 0,  5, 0, 0},
-					{0, 6, 0,  0, 8, 0,  4, 0, 0},
-
-					{1, 5, 0,  0, 0, 0,  0, 3, 2},
-					{0, 0, 0,  0, 0, 8,  0, 4, 5},
-					{0, 0, 4,  0, 0, 3,  0, 0, 0} };
+			int[][] input = { { 0, 0, 4,   0, 0, 0,   0, 6, 7 },
+		              { 3, 0, 0,   4, 7, 0,   0, 0, 5 },
+		              { 1, 5, 0,   8, 2, 0,   0, 0, 3 },
+		                    
+		              { 0, 0, 6,   0, 0, 0,   0, 3, 1 },
+		              { 8, 0, 2,   1, 0, 5,   6, 0, 4 },
+		              { 4, 1, 0,   0, 0, 0,   9, 0, 0 },
+		                  
+		              { 7, 0, 0,   0, 8, 0,   0, 4, 6 },
+		              { 6, 0, 0,   0, 1, 2,   0, 0, 0 },
+		              { 9, 3, 0,   0, 0, 0,   7, 1, 0 } };
 			this.sudoku = input;
 			
 			for(int x = 0; x < 9; x++) {
@@ -105,12 +105,40 @@ public class Sudoku {
 					row.allMySquares.get(x).number = this.sudoku[row.number][x];
 				}
 			}
-			System.out.print(this.allSquares.get(29).number);
 		}
-		public void updateSudoku() {
-			
+		 
+		public void setAllPossibles() {
+			for(Square s : this.allSquares) {
+				if(s.number == 0) {
+					s.checkPossibles();
+				}
+				
+			}
+		}
+		public void solve() {
+			for(Square s : this.allSquares) {
+				s.solve();
+			}
 		}
 		
+		public void print() {
+			String output = "";
+			for(Row r : this.myRows) {
+				int i = 0;
+				for(Square s : r.allMySquares) {
+					System.out.print(s.number + ", ");
+					if(i % 3 == 2) {
+						System.out.print("  ");
+					}
+					i++;
+				}
+				System.out.print("\n");
+				if(r.number%3 == 2) {
+					System.out.print("\n");
+				}
+			}
+			System.out.print(output);
+		}
 		
 		
 		

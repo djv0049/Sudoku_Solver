@@ -10,6 +10,12 @@ public class Controller {
 	
 	Sudoku S = new Sudoku();
 	S.takeInput();
+	S.print();
+	S.setAllPossibles();
+	S.solve();
+	System.out.println("done");
+	S.print();
+	
     }
 }
 	/*	

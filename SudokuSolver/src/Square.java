@@ -45,17 +45,25 @@ public class Square {
 		Box box = this.getBox();
 		Row row = this.getRow();
 		Column col = this.getColumn();
-		ArrayList<Integer> possibleNums = new ArrayList();
+		ArrayList<Integer> possibleNums = new ArrayList<Integer>();
 		for(int i = 1; i < 10; i ++) {
 			possibleNums.add(i);
 		}
-		System.out.print(possibleNums.get(5));
-		for(int n : possibleNums) {
-			if(box.containsSquare(n)) {//write a contain method in "section" that returns a boolean for whether the squares in the array have the number in question
-				possibleNums.remove(n);
+		for(int n = 0; n < 9 ; n++) {
+			if(box.containsSquare(n) || row.containsSquare(n) || col.containsSquare(n)) {//write a contain method in "section" that returns a boolean for whether the squares in the array have the number in question
+				possibleNums.set(n, 0);
 			}
 		}
-		this.possibles = possibleNums;
+		for(int p : possibleNums) {
+			if (p != 0) {
+				this.possibles.add(p);
+			}
+		}		
+	}
+	public void solve() {
+		if(this.possibles.size() == 1 && this.number == 0) {
+			this.number = this.possibles.get(0);
+		}
 	}
 		
 }
