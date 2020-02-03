@@ -1,20 +1,21 @@
 import java.util.ArrayList;
-
+// with refactoring, this could easily replace all child classes. 
+// but i left that how it is, for readability. 
+// and so i don't have to rewrite anything
 public class Section {
-	ArrayList<Square> allSquares;
-	ArrayList<Square> allMySquares;
+	ArrayList<Cell> allCells;
+	ArrayList<Cell> allMyCells;
 	int number;
 	public Section(int number) {
-		allMySquares = new ArrayList<Square>();
-		allSquares = new ArrayList<Square>();
-		
+		allMyCells = new ArrayList<Cell>();
+		allCells = new ArrayList<Cell>();
 		this.number = number;
 	}
 	public void checkDoubles() {
-		
+		// code for ensuring no two of the same number
 	}
-	public boolean containsSquare(int n) {
-		for(Square square : allMySquares) {
+	public boolean containsNumber(int n) {
+		for(Cell square : allMyCells) {
 			if(square.number == n) {
 				return true;
 			}
