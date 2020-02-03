@@ -1,6 +1,6 @@
-import java.lang.reflect.Array;
+import javax.swing.*;
+import javax.swing.plaf.OptionPaneUI;
 
-import java.util.*;
 public class Controller {
     public static void main(String[] args) {
 	// TODO Auto-generated method stub
@@ -14,8 +14,9 @@ public class Controller {
 	S.print();
 	S.setAllPossibles();
 	S.solve();
+	JFrame alertBox = new JFrame();
+	JOptionPane.showMessageDialog(alertBox, "this is an alertBox\n" + S.print());
 	System.out.println("done");
-	S.print();
 	
     }
 }

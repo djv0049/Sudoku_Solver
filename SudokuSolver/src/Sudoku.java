@@ -149,29 +149,31 @@ public class Sudoku {
 						this.setAllPossibles(); // update squares
 					}
 				}
-				System.out.println("Single num Changes Made: " + singles);
-				System.out.println("Hidden Single Changes Made: " + hiddenSingles);
-				this.print();
+				//System.out.println("Single num Changes Made: " + singles);
+				//System.out.println("Hidden Single Changes Made: " + hiddenSingles);
+				//this.print();
 			}while(singles + hiddenSingles != 0);
 		}
 		
-		public void print() {
-			String output = "______________________________\n"; // line to separate iterations
+		public String print() {
+			StringBuilder output = new StringBuilder("");
+			//String output = "______________________________\n"; // line to separate iterations
 			for(Row r : this.myRows) {
 				int i = 0;
 				for(Cell s : r.allMyCells) {
-					System.out.print(s.number + ", ");
+					output.append(s.number + ", ");
 					if(i % 3 == 2) { // spaces boxes horizontal
-						System.out.print("  ");
+						output.append("  ");
 					}
 					i++;
 				}
-				System.out.print("\n");
+				output.append("\n");
 				if(r.number % 3 == 2) { //spaces boxes vertical
-					System.out.print("\n");
+					output.append("\n");
 				}
 			}
-			System.out.println(output);
+			System.out.print(output.toString());
+			return output.toString();
 			
 		}
 }
