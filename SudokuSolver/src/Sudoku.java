@@ -83,23 +83,50 @@ public class Sudoku {
 				}
 				
 			}
-			System.out.print(c);
+		}
+		
+		public void presetInput() {
+			int[][] input = 
+	                    { { 0, 0, 0,   9, 2, 8,   0, 0, 0},
+	    	              { 0, 0, 0,   0, 1, 0,   0, 7, 3},
+	    	              { 0, 0, 0,   0, 7, 0,   0, 4, 0},
+	    	                
+	    	              { 0, 0, 0,   0, 0, 0,   0, 0, 8},
+	    	              { 0, 9, 0,   1, 8, 0,   0, 0, 2},
+	    	              { 8, 2, 0,   0, 0, 0,   7, 0, 0},
+	    	                
+	    	              { 0, 8, 3,   0, 4, 0,   6, 5, 0},
+	    	              { 7, 0, 0,   6, 0, 0,   0, 0, 0},
+	    	              { 0, 0, 1,   8, 0, 9,   0, 0, 0} };
+		this.sudoku = input;
+		convertFrom2dArray();
 		}
 		
 		public void takeInput() {
-			int[][] input = { { 0, 0, 4,   0, 0, 0,   0, 6, 7 },
-		              { 3, 0, 0,   4, 7, 0,   0, 0, 5 },
-		              { 1, 5, 0,   8, 2, 0,   0, 0, 3 },
-		                    
-		              { 0, 0, 6,   0, 0, 0,   0, 3, 1 },
-		              { 8, 0, 2,   1, 0, 5,   6, 0, 4 },
-		              { 4, 1, 0,   0, 0, 0,   9, 0, 0 },
-		                  
-		              { 7, 0, 0,   0, 8, 0,   0, 4, 6 },
-		              { 6, 0, 0,   0, 1, 2,   0, 0, 0 },
-		              { 9, 3, 0,   0, 0, 0,   7, 1, 0 } };
+			int [][] input = new int[9][9];
+			for(int i = 0; i < 9; i++) {
+				////////////////////////
+				Scanner read = new Scanner(System.in);
+				System.out.println("input the row"); 
+				String str = read.nextLine();
+				//System.out.println(input); // 1,2,3,4,5,6,7,8,9
+				if(str.length() != 9) {
+					i--;
+					System.out.print("please enter 9 numbers");
+					continue;
+				}
+				String stringArr[] = str.split("");
+				int row[] = new int[9]; 
+				for(int c = 0; c < 9; c++) {
+					row[c] = Integer.parseInt(stringArr[c]);
+				}
+				//System.out.println(row[4]); // 5
+				input[i] = row;
+			}
 			this.sudoku = input;
-			
+			convertFrom2dArray();
+		}
+		public void convertFrom2dArray() {
 			for(int x = 0; x < 9; x++) {
 				for(Row row : this.myRows) {
 					row.allMySquares.get(x).number = this.sudoku[row.number][x];
@@ -116,13 +143,25 @@ public class Sudoku {
 			}
 		}
 		public void solve() {
-			for(Square s : this.allSquares) {
-				s.solve();
-			}
+			int changes = 0;
+			do {
+				changes = 0 ;
+				for(Square s : this.allSquares) {
+					changes += s.changeSingles();
+					this.setAllPossibles();
+					for(int n = 1; n < 10; n++) {
+							changes += s.isOnlyNumber(n);
+							this.setAllPossibles();
+					}
+				}
+				System.out.println("Changes Made: " + changes);
+				this.print();
+			}while(changes != 0);
+			
 		}
 		
 		public void print() {
-			String output = "";
+			String output = "______________________________\n";
 			for(Row r : this.myRows) {
 				int i = 0;
 				for(Square s : r.allMySquares) {
@@ -137,7 +176,8 @@ public class Sudoku {
 					System.out.print("\n");
 				}
 			}
-			System.out.print(output);
+			System.out.println(output);
+			
 		}
 		
 		

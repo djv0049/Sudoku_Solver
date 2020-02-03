@@ -9,7 +9,8 @@ public class Controller {
 	//win.createAndShowGUI();
 	
 	Sudoku S = new Sudoku();
-	S.takeInput();
+	//S.takeInput();
+	S.presetInput();
 	S.print();
 	S.setAllPossibles();
 	S.solve();
