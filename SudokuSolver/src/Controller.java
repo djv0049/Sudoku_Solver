@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.plaf.OptionPaneUI;
 
 public class Controller {
     public static void main(String[] args) {
@@ -17,6 +16,6 @@ public class Controller {
 	JFrame alertBox = new JFrame();
 	JOptionPane.showMessageDialog(alertBox, "this is an alertBox\n" + S.print());
 	System.out.println("done");
-	
+	Gui g = new Gui();
     }
 }

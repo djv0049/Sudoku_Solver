@@ -23,18 +23,18 @@ public class Sudoku {
 		}
 		
 		public void presetInput() { // for testing purposes mainly.
-			int[][] input = 
-				 		{ { 4, 0, 0,   8, 0, 0,   0, 5, 0 },
-	    	              { 2, 1, 0,   0, 0, 4,   3, 0, 6 },
-	    	              { 7, 0, 3,   0, 6, 0,   0, 0, 4 },
-	    	                
-	    	              { 0, 0, 0,   0, 3, 1,   0, 0, 0 },
-	    	              { 5, 0, 0,   9, 0, 0,   0, 0, 0 },
-	    	              { 0, 0, 9,   0, 7, 5,   0, 0, 1 },
-	    	                
-	    	              { 0, 0, 0,   3, 8, 7,   0, 0, 0 },
-	    	              { 0, 0, 5,   4, 0, 2,   7, 0, 3 },
-	    	              { 0, 0, 4,   0, 1, 0,   0, 0, 0 } };
+			int[][] input =              
+					{ { 0, 0, 6,   0, 3, 1,   0, 7, 0,},
+		              { 4, 3, 7,   0, 0, 5,   0, 0, 0,},
+		              { 0, 1, 0,   4, 6, 7,   0, 0, 8,},
+		                
+		              { 0, 2, 9,   1, 7, 8,   3, 0, 0,},
+		              { 0, 0, 0,   0, 0, 0,   0, 2, 6,},
+		              { 3, 0, 0,   0, 5, 0,   0, 0, 0,},
+		                
+		              { 8, 0, 5,   0, 0, 4,   9, 1, 0,},
+		              { 0, 0, 3,   5, 0, 9,   0, 8, 7,},
+		              { 7, 9, 0,   0, 8, 6,   0, 0, 4,} };
 		this.sudoku = input;
 		convertFrom2dArray();
 		}
@@ -61,16 +61,14 @@ public class Sudoku {
 		}
 		public void sortCells() {  // assign squares to cols rows and boxes, and vice-versa
 			for(Cell s : this.allCells) {
-				for(int x = 0; x < 9; x++) {
-					if(s.x == x) {
-						this.myColumns.get(x).allMyCells.add(s);
-						s.setCol(this.myColumns.get(x));
-					}				
-				}//// NOTE TO SELF. ^ v these two "for"s may be joinable into one loop 
-				for( int y = 0; y < 9; y++) {
-					if(s.y == y) {
-						this.myRows.get(y).allMyCells.add(s);
-						s.setRow(this.myRows.get(y));
+				for(int i = 0; i < 9; i++) {
+					if(s.x == i) {
+						this.myColumns.get(i).allMyCells.add(s);
+						s.setCol(this.myColumns.get(i));
+					}
+					if(s.y == i) {
+						this.myRows.get(i).allMyCells.add(s);
+						s.setRow(this.myRows.get(i));
 					}
 				}
 				for( int y = 0; y < 9; y++) {  // math to figure out which box the numbers go into. took me way too long to get this so simple
@@ -95,7 +93,7 @@ public class Sudoku {
 			}
 		}
 		
-		public void takeInput() {
+		public void takeInput() { //this method may need deleting to make way for a manual input from text box/button
 			int [][] input = new int[9][9];
 			Scanner read = new Scanner(System.in); // defined before loop so can be closed outside of loop
 			for(int i = 0; i < 9; i++) {
