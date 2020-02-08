@@ -1,7 +1,18 @@
 import java.awt.Dimension;
 import javax.swing.*;
+import java.util.Arrays;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 public class Gui extends JFrame{
+	// initialize class variables 
 	public static Gui gui;
+	JPanel panel;
+	JLabel inputLabel;
+	JLabel solution;
+	JTextField inputTxt;
+	JButton addBtn;
+	Sudoku s;
 	
 	public Gui() {
 		this.setSize(600,400);
@@ -11,19 +22,50 @@ public class Gui extends JFrame{
 	}
 	
 	public void setup() {
-		JPanel panel = new JPanel();
+		// instantiate variables
+		s = new Sudoku();
+		panel = new JPanel();
+		inputLabel = new JLabel("type out a line");
+		solution = new JLabel("");
+		inputTxt = new JNumberTextField();
+		addBtn = new JButton("add Line");
+		
+		// edit object properties 
+		inputTxt.setPreferredSize(new Dimension(150,20));
+		
+		// add objects to frame
 		this.getContentPane().add(panel);
-		JLabel label = new JLabel("type out a line");
-		JTextField input = new JTextField();
-		input.setPreferredSize(new Dimension(100,50));
-		JButton add = new JButton("add Line");
-		panel.add(label);
-		panel.add(input);
-		panel.add(add);
+		panel.add(inputLabel);
+		panel.add(inputTxt);
+		panel.add(addBtn);
+		panel.add(solution);
+		
+		
+		// add event listeners.
+		ActionListener myListener = new MyActionListener();
+		addBtn.addActionListener(myListener);
+		
+	}
+	
+	public void printSudokuLine(String row) {
+		String[] s = row.split("(?<=\\G...)");
+		String result = "<html>";
+		for(String i : s) {
+			result += i;
+			result += " ";
+		}
+		result +="<br/>";
+		result += "</html>";
+		solution.setText(solution.getText().concat(result));
+		int length = solution.getText().length();
+		if(length == 36 || length == 73) {
+			solution.setText(solution.getText().concat("\n"));
+		}
 		
 	}
 	
 	// to do: 
+	// make an event handler 
 	// make a function to take the input from text box 
 	// ensure the function is only triggered when add button is pressed.
 	// functions should operate in a similar fashion to the sudoku.takeInput function
@@ -34,4 +76,57 @@ public class Gui extends JFrame{
 	
 	//// messagae ////
 	
+	private class MyActionListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == addBtn) {
+				// send the line to a function that adds the line to the array of lines
+				if(inputTxt.getText().length() == 9) {
+					s.addFromInput(inputTxt.getText());
+					printSudokuLine(inputTxt.getText());
+					inputTxt.setText("");
+					
+				}
+				else {
+					System.out.print("please enter 9 digits without spaces");
+				}
+				System.out.println("this is displayed when you press the button");
+			}
+		}
+	}
+
+
+	private class JNumberTextField extends JTextField{
+		
+		@Override
+		public void processKeyEvent(KeyEvent ev) {
+			if(Character.isDigit(ev.getKeyChar()) || ev.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+				super.processKeyEvent(ev);
+			}
+			ev.consume();
+			return;	
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

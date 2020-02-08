@@ -10,12 +10,14 @@ public class Sudoku {
 		ArrayList<Row> myRows;
 		ArrayList<Column> myColumns;
 		ArrayList<Cell> allCells;
+		int rowIterator;
 		
 		public Sudoku() {
 			this.myBoxes = new ArrayList<Box>();
 			this.myRows = new ArrayList<Row>();
 			this.myColumns = new ArrayList<Column>();
 			this.allCells = new ArrayList<Cell>();
+			rowIterator = 0;
 			// make all new rows collumns, boxes and squares, then organise em
 			create();
 			makeAllCells();
@@ -93,28 +95,18 @@ public class Sudoku {
 			}
 		}
 		
-		public void takeInput() { //this method may need deleting to make way for a manual input from text box/button
-			int [][] input = new int[9][9];
-			Scanner read = new Scanner(System.in); // defined before loop so can be closed outside of loop
+		public void addFromInput(String row) {
+			
+			String[] stringArr = row.split("");
+			int[] intArr = new int[9];
 			for(int i = 0; i < 9; i++) {
-				System.out.println("input the row"); 
-				String str = read.nextLine();
-				if(str.length() != 9) {
-					i--; // go back one
-					System.out.print("please enter 9 numbers");
-					continue; // skips rest of loop
-				}
-				String stringArr[] = str.split("");
-				int row[] = new int[9]; 
-				for(int c = 0; c < 9; c++) {
-					row[c] = Integer.parseInt(stringArr[c]); // convert string[] to int[]
-				}
-				input[i] = row;
+				intArr[i] = Integer.parseInt(stringArr[i]);
 			}
-			read.close(); // close reader -- good practice
-
-			this.sudoku = input;
-			convertFrom2dArray(); 
+			this.sudoku[rowIterator] = intArr;
+			if(rowIterator == 8) {
+				this.solve();
+			}
+			rowIterator += 1; // at end to stop out of bounds error
 		}
 		
 		public void convertFrom2dArray() {  
