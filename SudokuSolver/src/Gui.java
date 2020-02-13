@@ -59,25 +59,26 @@ public class Gui extends JFrame{
 		String[] s = row.split("(?<=\\G...)");
 		String result = "";
 		if(solution.getText().length() == 0 ) {
-			result = "<html>";
+			result = "<html><p>";
 		}
 		for(String i : s) {
+			i = i.replaceAll(".(?!$)", "$0 | ");
 			result += i;
-			result += "  ";
+			result += " &nbsp&nbsp&nbsp ";
 		}
 		result +="<br/>";
-		result += "</html>";
+		result += "</p></html>";
 		System.out.print(solution.getText().length());
 		if(solution.getText().length() > 0) {
-			result = solution.getText().replaceAll("</html>",result);
+			result = solution.getText().replaceAll("</p></html>",result);
 		}
 		System.out.print(result);
 		int lineCount = result.split("<br/>").length;
-		if(lineCount == 4 || lineCount == 7) {
+		if(lineCount == 4 || lineCount == 8) {
 			result = 
-					result.replaceAll("</html>", "  <br/></html>");
+					result.replaceAll("</p></html>", "  <br/></p></html>");
 		}
-		if(lineCount <= 11) {
+		if(lineCount <= 12) {
 			solution.setText(result);
 			this.s.addFromInput(inputTxt.getText());
 			
