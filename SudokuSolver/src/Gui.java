@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.*;
 import java.util.Arrays;
@@ -8,10 +9,14 @@ public class Gui extends JFrame{
 	// initialize class variables 
 	public static Gui gui;
 	JPanel panel;
+	JPanel inputPanel;
+	JPanel outputPanel;
 	JLabel inputLabel;
-	JLabel solution;
+	JLabel original;
+	JLabel solved;
 	JTextField inputTxt;
 	JButton addBtn;
+	JButton solveBtn;
 	Sudoku s;
 	
 	public Gui() {
@@ -24,26 +29,36 @@ public class Gui extends JFrame{
 	public void setup() {
 		// instantiate variables
 		s = new Sudoku();
-		panel = new JPanel();
+		panel = new JPanel(new BorderLayout());
+		inputPanel = new JPanel();
+		outputPanel = new JPanel(new BorderLayout());
 		inputLabel = new JLabel("type out a line");
-		solution = new JLabel("");
+		original = new JLabel("");
+		solved = new JLabel("");
 		inputTxt = new JNumberTextField();
 		addBtn = new JButton("add Line");
+		solveBtn = new JButton("solve!");
 		
 		// edit object properties 
 		inputTxt.setPreferredSize(new Dimension(150,20));
 		
+		
 		// add objects to frame
 		this.getContentPane().add(panel);
-		panel.add(inputLabel);
-		panel.add(inputTxt);
-		panel.add(addBtn);
-		panel.add(solution);
+		panel.add(inputPanel,BorderLayout.NORTH);
+		panel.add(outputPanel, BorderLayout.CENTER);
+		inputPanel.add(inputLabel);
+		inputPanel.add(inputTxt);
+		inputPanel.add(addBtn);
+		inputPanel.add(solveBtn);
+		outputPanel.add(original, BorderLayout.WEST);
+		outputPanel.add(solved);
 		
 		
 		// add event listeners.
 		ActionListener myListener = new MyActionListener();
 		addBtn.addActionListener(myListener);
+		solveBtn.addActionListener(myListener);
 		inputTxt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -55,10 +70,10 @@ public class Gui extends JFrame{
 	/*
 	 * need to change how all this works so that it'll work on other labels. not just the solution label
 	 */
-	public void printSudokuLine(String row) {
+	public void printSudokuLine(String row, JLabel l) {
 		String[] s = row.split("(?<=\\G...)");
 		String result = "";
-		if(solution.getText().length() == 0 ) {
+		if(l.getText().length() == 0 ) {
 			result = "<html><p>";
 		}
 		for(String i : s) {
@@ -68,9 +83,9 @@ public class Gui extends JFrame{
 		}
 		result +="<br/>";
 		result += "</p></html>";
-		System.out.print(solution.getText().length());
-		if(solution.getText().length() > 0) {
-			result = solution.getText().replaceAll("</p></html>",result);
+		System.out.print(l.getText().length());
+		if(l.getText().length() > 0) {
+			result = l.getText().replaceAll("</p></html>",result);
 		}
 		System.out.print(result);
 		int lineCount = result.split("<br/>").length;
@@ -79,20 +94,36 @@ public class Gui extends JFrame{
 					result.replaceAll("</p></html>", "  <br/></p></html>");
 		}
 		if(lineCount <= 12) {
-			solution.setText(result);
-			this.s.addFromInput(inputTxt.getText());
-			
+			l.setText(result);
+			if (l == original )this.s.addFromInput(inputTxt.getText());	
 		}
 		else {
 			System.out.println("\nthere are already 9 lines, click solve");
 		}
-		
+		if(lineCount == 13 && l == original) {
+			// show solution button or make it available somehow
+			
+		}
+	}
+	
+	
+	// method to convert solved solution to string so it can be passed to method that will display it
+	public void resultToString() {
+		this.s.convertTo2dArray();
+		String outputLine = "";
+		for(int[] y : s.sudoku) {
+			outputLine = "";
+			for(int x : y) {
+				outputLine += x;
+			}
+			printSudokuLine(outputLine, solved);
+		}
 	}
 	
 	public void addLineToDisplay() {
 	// send the line to a function that adds the line to the array of lines
 		if(inputTxt.getText().length() == 9) {
-			printSudokuLine(inputTxt.getText());
+			printSudokuLine(inputTxt.getText(),original);
 			inputTxt.setText("");
 			
 		}
@@ -101,6 +132,7 @@ public class Gui extends JFrame{
 		}
 		System.out.println("this is displayed when you press the button");
 	}
+	
 	// to do: 
 	// make an event handler 
 	// make a function to take the input from text box 
@@ -119,7 +151,12 @@ public class Gui extends JFrame{
 			if(e.getSource() == addBtn) {
 				addLineToDisplay();
 			}
+			if(e.getSource()==solveBtn) {
+				s.solve();
+				resultToString();
+			}
 		}
+		
 	}
 
 

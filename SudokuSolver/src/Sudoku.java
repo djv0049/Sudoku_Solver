@@ -103,9 +103,9 @@ public class Sudoku {
 				intArr[i] = Integer.parseInt(stringArr[i]);
 			}
 			this.sudoku[rowIterator] = intArr;
-			if(rowIterator == 8) {
+			/*if(rowIterator == 8) {
 				this.solve();
-			}
+			}*/
 			rowIterator += 1; // at end to stop out of bounds error
 		}
 		
@@ -113,6 +113,14 @@ public class Sudoku {
 			for(int x = 0; x < 9; x++) {
 				for(Row row : this.myRows) {
 					row.allMyCells.get(x).number = this.sudoku[row.number][x];
+				}
+			}
+		}
+		
+		public void convertTo2dArray() {
+			for(Row row : this.myRows) {
+				for(int i = 0; i < 9;i++) {
+					this.sudoku[row.number][i] = row.allMyCells.get(i).number;
 				}
 			}
 		}
@@ -126,8 +134,9 @@ public class Sudoku {
 		}
 		
 		public void solve() {
+			convertFrom2dArray();
 			int singles;
-			int hiddenSingles;
+			int hiddenSingles;	
 			do {
 				singles = 0 ;
 				hiddenSingles= 0;
@@ -143,6 +152,8 @@ public class Sudoku {
 				//System.out.println("Hidden Single Changes Made: " + hiddenSingles);
 				//this.print();
 			}while(singles + hiddenSingles != 0);
+			this.convertTo2dArray();
+			System.out.print("test Point");
 		}
 		
 		public String print() {

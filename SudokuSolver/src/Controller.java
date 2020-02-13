@@ -10,10 +10,8 @@ public class Controller {
 	Sudoku S = new Sudoku();
 	Gui g = new Gui();
 	//S.takeInput();
-	S.presetInput();
 	S.print();
 	S.setAllPossibles();
-	S.solve();
 	JFrame alertBox = new JFrame();
 	// JOptionPane.showMessageDialog(alertBox, "this is an alertBox\n" + S.print());
 	//System.out.println("done");
