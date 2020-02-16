@@ -118,6 +118,11 @@ public class Gui extends JFrame{
 			}
 			printSudokuLine(outputLine, solved);
 		}
+		String f = solved.getText();
+		JFrame alertBox = new JFrame();
+		JOptionPane.showMessageDialog(alertBox, "this is an alertBox\n" + f);
+		solved.setText("");
+		
 	}
 	
 	public void addLineToDisplay() {
@@ -144,6 +149,7 @@ public class Gui extends JFrame{
 	// have the solution display in an alertBox fashion
 	
 	//// messagae ////
+	
 	
 	private class MyActionListener implements ActionListener {
 		@Override
