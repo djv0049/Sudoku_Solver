@@ -1,11 +1,88 @@
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
+
 import javax.swing.*;
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.function.ToIntFunction;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.lang.reflect.Array;
 public class Gui extends JFrame{
+	Sudoku s;
+	ArrayList<ArrayList<JNumberTextField>> numFields;
+	// new gui to have 81 text fields max input 0ne character, and only numbers. 
+	// each text field to assign value to their corresponding cell
+	
+	// loop creating all textfields and assigning them cells.
+	public void initializeNumFields() {
+		this.numFields = new ArrayList<ArrayList<JNumberTextField>>();
+		for(int y = 0; y < 9; y++) {
+			ArrayList<JNumberTextField> row = new ArrayList<JNumberTextField>();
+			for(int x = 0; x < 9; x++) {
+				Cell c = s.getCellByXY(x, y);
+				JNumberTextField box = new JNumberTextField(c);
+				box.setPreferredSize(new Dimension(20,20));
+				row.add(box);
+			}
+			numFields.add(row);
+		}
+	}
+	
+	public void inputOnGui() { 
+		JPanel p = new JPanel(new GridLayout(9, 9));
+		
+		for(int y = 0 ; y < 9; y++) {
+			for(int x = 0; x<9 ; x++) {
+				p.add(numFields.get(y).get(x));
+			}
+		}
+		this.inputPanel.add(p);
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	// initialize class variables 
 	public static Gui gui;
 	JPanel panel;
@@ -17,13 +94,14 @@ public class Gui extends JFrame{
 	JTextField inputTxt;
 	JButton addBtn;
 	JButton solveBtn;
-	Sudoku s;
+
 	
 	public Gui() {
 		this.setSize(600,400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setup();
 		this.setVisible(true);
+		
 	}
 	
 	public void setup() {
@@ -35,12 +113,12 @@ public class Gui extends JFrame{
 		inputLabel = new JLabel("type out a line");
 		original = new JLabel("");
 		solved = new JLabel("");
-		inputTxt = new JNumberTextField();
+		//inputTxt = new JNumberTextField(); no longer working because it now needs a cell input
 		addBtn = new JButton("add Line");
 		solveBtn = new JButton("solve!");
 		
 		// edit object properties 
-		inputTxt.setPreferredSize(new Dimension(150,20));
+		//inputTxt.setPreferredSize(new Dimension(150,20));
 		
 		
 		// add objects to frame
@@ -48,7 +126,7 @@ public class Gui extends JFrame{
 		panel.add(inputPanel,BorderLayout.NORTH);
 		panel.add(outputPanel, BorderLayout.CENTER);
 		inputPanel.add(inputLabel);
-		inputPanel.add(inputTxt);
+		//inputPanel.add(inputTxt);
 		inputPanel.add(addBtn);
 		inputPanel.add(solveBtn);
 		outputPanel.add(original, BorderLayout.WEST);
@@ -59,13 +137,14 @@ public class Gui extends JFrame{
 		ActionListener myListener = new MyActionListener();
 		addBtn.addActionListener(myListener);
 		solveBtn.addActionListener(myListener);
-		inputTxt.addActionListener(new ActionListener() {
+		/*inputTxt.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				addLineToDisplay();				
 			}
-		});		
-		
+		});*/		
+		initializeNumFields();
+		inputOnGui();
 	}
 	/*
 	 * need to change how all this works so that it'll work on other labels. not just the solution label
@@ -167,14 +246,22 @@ public class Gui extends JFrame{
 
 
 	private class JNumberTextField extends JTextField{
-		
+		Cell myCell;
+		private JNumberTextField(Cell c) {
+			myCell = c; 
+		}
 		@Override
 		public void processKeyEvent(KeyEvent ev) {
-			if(KeyEvent.VK_ENTER == ev.getKeyCode()) {
+			/*if(KeyEvent.VK_ENTER == ev.getKeyCode()) {
 				addLineToDisplay();
-			}
+			}*/
 			if(Character.isDigit(ev.getKeyChar()) || ev.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-				super.processKeyEvent(ev);
+				if(this.getText().length()<1) {
+					super.processKeyEvent(ev);
+					myCell.number = Integer.parseInt(ev.getKeyText(ev.getKeyCode()));
+					int x = 1+1;
+				}
+				
 			}
 			ev.consume();
 			return;	

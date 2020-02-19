@@ -94,6 +94,14 @@ public class Sudoku {
 				}
 			}
 		}
+		public Cell getCellByXY(int x, int y) {
+			for(Cell c : this.allCells) {
+				if(c.x == x && c.y == y) {
+					return c;
+				}
+			}
+			return null;
+		}
 		
 		public void addFromInput(String row) {
 			
