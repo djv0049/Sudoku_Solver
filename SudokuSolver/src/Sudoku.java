@@ -38,7 +38,6 @@ public class Sudoku {
 		              { 0, 0, 3,   5, 0, 9,   0, 8, 7,},
 		              { 7, 9, 0,   0, 8, 6,   0, 0, 4,} };
 		this.sudoku = input;
-		convertFrom2dArray();
 		}
 		
 		public void create() { // makes 9 of all em, then adds them to their respective lists
@@ -117,14 +116,6 @@ public class Sudoku {
 			rowIterator += 1; // at end to stop out of bounds error
 		}
 		
-		public void convertFrom2dArray() {  
-			for(int x = 0; x < 9; x++) {
-				for(Row row : this.myRows) {
-					row.allMyCells.get(x).number = this.sudoku[row.number][x];
-				}
-			}
-		}
-		
 		public void convertTo2dArray() {
 			for(Row row : this.myRows) {
 				for(int i = 0; i < 9;i++) {
@@ -142,7 +133,6 @@ public class Sudoku {
 		}
 		
 		public void solve() {
-			convertFrom2dArray();
 			int singles;
 			int hiddenSingles;	
 			do {
@@ -156,11 +146,9 @@ public class Sudoku {
 						this.setAllPossibles(); // update squares
 					}
 				}
-				//System.out.println("Single num Changes Made: " + singles);
-				//System.out.println("Hidden Single Changes Made: " + hiddenSingles);
-				//this.print();
 			}while(singles + hiddenSingles != 0);
 			this.convertTo2dArray();
+			
 			System.out.print("test Point");
 		}
 		

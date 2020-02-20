@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.function.ToIntFunction;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Array;
 public class Gui extends JFrame{
@@ -187,7 +189,7 @@ public class Gui extends JFrame{
 	
 	
 	// method to convert solved solution to string so it can be passed to method that will display it
-	public void resultToString() {
+	public void showResult() {
 		this.s.convertTo2dArray();
 		String outputLine = "";
 		for(int[] y : s.sudoku) {
@@ -198,23 +200,11 @@ public class Gui extends JFrame{
 			printSudokuLine(outputLine, solved);
 		}
 		String f = solved.getText();
-		JFrame alertBox = new JFrame();
-		JOptionPane.showMessageDialog(alertBox, "this is an alertBox\n" + f);
 		solved.setText("");
+		JFrame alertBox = new JFrame();
+		JOptionPane.showMessageDialog(alertBox, "this is an alertBox with your solution\n" + f);
 		
-	}
-	
-	public void addLineToDisplay() {
-	// send the line to a function that adds the line to the array of lines
-		if(inputTxt.getText().length() == 9) {
-			printSudokuLine(inputTxt.getText(),original);
-			inputTxt.setText("");
-			
-		}
-		else {
-			System.out.print("please enter 9 digits without spaces");
-		}
-		System.out.println("this is displayed when you press the button");
+		
 	}
 	
 	// to do: 
@@ -233,12 +223,11 @@ public class Gui extends JFrame{
 	private class MyActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == addBtn) {
-				addLineToDisplay();
-			}
+
 			if(e.getSource()==solveBtn) {
 				s.solve();
-				resultToString();
+				
+				showResult();
 			}
 		}
 		
@@ -247,24 +236,45 @@ public class Gui extends JFrame{
 
 	private class JNumberTextField extends JTextField{
 		Cell myCell;
+		JNumberTextField thisTxt;
 		private JNumberTextField(Cell c) {
 			myCell = c; 
+			thisTxt = this;
+			this.setHorizontalAlignment(JNumberTextField.CENTER);
 			//add focuslistener so function happens when focus is gained/lost
 			//setFocusable(true);
 			//addFocusListener();
+			this.addFocusListener(new FocusListener() {
+				
+				@Override
+				public void focusLost(FocusEvent e) {
+					if(thisTxt.getText().length() > 0)
+						myCell.number = Integer.parseInt(thisTxt.getText());
+					int x = 0;
+				}
+				
+				@Override
+				public void focusGained(FocusEvent e) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
 		}
 		@Override
 		public void processKeyEvent(KeyEvent ev) {
 			/*if(KeyEvent.VK_ENTER == ev.getKeyCode()) {
 				addLineToDisplay();
 			}*/
-			if(Character.isDigit(ev.getKeyChar()) || ev.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-				if(this.getText().length()<1) {
+			if(Character.isDigit(ev.getKeyChar())) {
+				
+				if(this.getText().length()<1) { // only allows one character to be input
 					super.processKeyEvent(ev);
-					myCell.number = 0;
-					int x = 1+1;
 				}
 				
+			}
+			else if (ev.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+				if(this.getText().length()>0) // just gets rid of the annoying baloop that windows gives you when deleting an empty field
+				super.processKeyEvent(ev);
 			}
 			ev.consume();
 			return;	
