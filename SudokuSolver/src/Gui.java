@@ -249,6 +249,9 @@ public class Gui extends JFrame{
 		Cell myCell;
 		private JNumberTextField(Cell c) {
 			myCell = c; 
+			//add focuslistener so function happens when focus is gained/lost
+			//setFocusable(true);
+			//addFocusListener();
 		}
 		@Override
 		public void processKeyEvent(KeyEvent ev) {
@@ -258,7 +261,7 @@ public class Gui extends JFrame{
 			if(Character.isDigit(ev.getKeyChar()) || ev.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 				if(this.getText().length()<1) {
 					super.processKeyEvent(ev);
-					myCell.number = Integer.parseInt(ev.getKeyText(ev.getKeyCode()));
+					myCell.number = 0;
 					int x = 1+1;
 				}
 				
@@ -266,6 +269,7 @@ public class Gui extends JFrame{
 			ev.consume();
 			return;	
 		}
+		
 		
 	}
 }
