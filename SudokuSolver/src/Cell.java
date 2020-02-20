@@ -1,10 +1,13 @@
 import java.util.*;
+
+import javax.swing.JTextField;
 public class Cell {
 	int x;
 	int y;
 	Box myBox;
 	Row myRow;
 	Column myCol;
+	JTextField myTextField;
 	ArrayList<Integer> possibles;
 	int number;
 	public Cell(int X, int Y) {

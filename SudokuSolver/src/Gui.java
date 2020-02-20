@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 
@@ -16,21 +17,27 @@ import java.lang.reflect.Array;
 public class Gui extends JFrame{
 	Sudoku s;
 	ArrayList<ArrayList<JNumberTextField>> numFields;
+	ArrayList<JNumberTextField> allmyTextFields;
 	// new gui to have 81 text fields max input 0ne character, and only numbers. 
 	// each text field to assign value to their corresponding cell
 	
 	// loop creating all textfields and assigning them cells.
 	public void initializeNumFields() {
 		this.numFields = new ArrayList<ArrayList<JNumberTextField>>();
+		allmyTextFields = new ArrayList<Gui.JNumberTextField>();
 		for(int y = 0; y < 9; y++) {
 			ArrayList<JNumberTextField> row = new ArrayList<JNumberTextField>();
 			for(int x = 0; x < 9; x++) {
 				Cell c = s.getCellByXY(x, y);
 				JNumberTextField box = new JNumberTextField(c);
+				box.myCell.myTextField = box;
 				box.setPreferredSize(new Dimension(20,20));
 				row.add(box);
+				allmyTextFields.add(box);
+				setTextFieldColor(box, x,y);
 			}
 			numFields.add(row);
+			
 		}
 	}
 	
@@ -44,35 +51,11 @@ public class Gui extends JFrame{
 		}
 		this.inputPanel.add(p);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	public void setTextFieldColor(JNumberTextField box, int x, int y){
+		if(((x < 3 || x > 5) && (y < 3 || y > 5 )) || ((x < 6 && x > 2) && (y < 6 && y > 2))){ // should get the outside corner boxes
+			box.setBackground(Color.LIGHT_GRAY);
+		}
+	}
 	
 	
 	
@@ -260,6 +243,7 @@ public class Gui extends JFrame{
 				}
 			});
 		}
+		
 		@Override
 		public void processKeyEvent(KeyEvent ev) {
 			/*if(KeyEvent.VK_ENTER == ev.getKeyCode()) {
@@ -269,6 +253,8 @@ public class Gui extends JFrame{
 				
 				if(this.getText().length()<1) { // only allows one character to be input
 					super.processKeyEvent(ev);
+					if(ev.getID() == KeyEvent.KEY_TYPED) // i wanted to use the release ID for this but apparently that doesnt occur???/
+					this.transferFocus();
 				}
 				
 			}

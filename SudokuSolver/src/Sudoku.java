@@ -145,6 +145,8 @@ public class Sudoku {
 						hiddenSingles += s.isOnlyNumber(n); // only square in arrays with number "n"
 						this.setAllPossibles(); // update squares
 					}
+					if(s.number!=0)
+					s.myTextField.setText(String.format("%s", s.number));
 				}
 			}while(singles + hiddenSingles != 0);
 			this.convertTo2dArray();
