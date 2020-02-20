@@ -18,7 +18,7 @@ public class Gui extends JFrame{
 	Sudoku s;
 	ArrayList<ArrayList<JNumberTextField>> numFields;
 	ArrayList<JNumberTextField> allmyTextFields;
-	// new gui to have 81 text fields max input 0ne character, and only numbers. 
+	// gui to have 81 text fields max input 0ne character, and only numbers. 
 	// each text field to assign value to their corresponding cell
 	
 	// loop creating all textfields and assigning them cells.
@@ -37,7 +37,6 @@ public class Gui extends JFrame{
 				setTextFieldColor(box, x,y);
 			}
 			numFields.add(row);
-			
 		}
 	}
 	
@@ -57,27 +56,13 @@ public class Gui extends JFrame{
 		}
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	// initialize class variables 
 	public static Gui gui;
 	JPanel panel;
 	JPanel inputPanel;
 	JPanel outputPanel;
 	JLabel inputLabel;
-	JLabel original;
 	JLabel solved;
-	JTextField inputTxt;
-	JButton addBtn;
 	JButton solveBtn;
 
 	
@@ -96,31 +81,20 @@ public class Gui extends JFrame{
 		inputPanel = new JPanel();
 		outputPanel = new JPanel(new BorderLayout());
 		inputLabel = new JLabel("type out a line");
-		original = new JLabel("");
 		solved = new JLabel("");
-		//inputTxt = new JNumberTextField(); no longer working because it now needs a cell input
-		addBtn = new JButton("add Line");
 		solveBtn = new JButton("solve!");
-		
-		// edit object properties 
-		//inputTxt.setPreferredSize(new Dimension(150,20));
-		
 		
 		// add objects to frame
 		this.getContentPane().add(panel);
 		panel.add(inputPanel,BorderLayout.NORTH);
 		panel.add(outputPanel, BorderLayout.CENTER);
 		inputPanel.add(inputLabel);
-		//inputPanel.add(inputTxt);
-		inputPanel.add(addBtn);
 		inputPanel.add(solveBtn);
-		outputPanel.add(original, BorderLayout.WEST);
 		outputPanel.add(solved);
 		
 		
 		// add event listeners.
 		ActionListener myListener = new MyActionListener();
-		addBtn.addActionListener(myListener);
 		solveBtn.addActionListener(myListener);
 		/*inputTxt.addActionListener(new ActionListener() {
 			@Override
@@ -132,8 +106,9 @@ public class Gui extends JFrame{
 		inputOnGui();
 	}
 	/*
-	 * need to change how all this works so that it'll work on other labels. not just the solution label
+	 * need to change how all this works so it just returns a string for the alert box
 	 */
+	
 	public void printSudokuLine(String row, JLabel l) {
 		String[] s = row.split("(?<=\\G...)");
 		String result = "";
@@ -158,20 +133,13 @@ public class Gui extends JFrame{
 					result.replaceAll("</p></html>", "  <br/></p></html>");
 		}
 		if(lineCount <= 12) {
-			l.setText(result);
-			if (l == original )this.s.addFromInput(inputTxt.getText());	
-		}
-		else {
-			System.out.println("\nthere are already 9 lines, click solve");
-		}
-		if(lineCount == 13 && l == original) {
-			// show solution button or make it available somehow
-			
+			l.setText(result);	
 		}
 	}
 	
 	
 	// method to convert solved solution to string so it can be passed to method that will display it
+	// and then passed to the alert box
 	public void showResult() {
 		this.s.convertTo2dArray();
 		String outputLine = "";
@@ -185,55 +153,42 @@ public class Gui extends JFrame{
 		String f = solved.getText();
 		solved.setText("");
 		JFrame alertBox = new JFrame();
-		JOptionPane.showMessageDialog(alertBox, "this is an alertBox with your solution\n" + f);
+		JOptionPane.showMessageDialog(alertBox, "this is an alertBox with your solution\n" + f,"Messgae",0 );
 		
 		
 	}
 	
-	// to do: 
-	// make an event handler 
-	// make a function to take the input from text box 
-	// ensure the function is only triggered when add button is pressed.
-	// functions should operate in a similar fashion to the sudoku.takeInput function
-	// have the window print out each line in a sudoku format when add is pressed.
-	// add a delete line button
-	// add a solve button when the ninth line has been entered.
-	// have the solution display in an alertBox fashion
-	
-	//// messagae ////
 	
 	
 	private class MyActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			if(e.getSource()==solveBtn) {
 				s.solve();
-				
 				showResult();
 			}
 		}
-		
 	}
 
 
-	private class JNumberTextField extends JTextField{
+	
+	private class JNumberTextField extends JTextField{ // new class to cover number only entry on specific feilds
 		Cell myCell;
 		JNumberTextField thisTxt;
 		private JNumberTextField(Cell c) {
 			myCell = c; 
 			thisTxt = this;
 			this.setHorizontalAlignment(JNumberTextField.CENTER);
-			//add focuslistener so function happens when focus is gained/lost
-			//setFocusable(true);
-			//addFocusListener();
-			this.addFocusListener(new FocusListener() {
+			this.addFocusListener(new FocusListener() { // sets myCell to the text value when focus shifts
 				
 				@Override
 				public void focusLost(FocusEvent e) {
 					if(thisTxt.getText().length() > 0)
 						myCell.number = Integer.parseInt(thisTxt.getText());
-					int x = 0;
+					else if(thisTxt.getText().length() == 0) {
+						myCell.number = 0;
+					}
+					
 				}
 				
 				@Override
@@ -246,15 +201,11 @@ public class Gui extends JFrame{
 		
 		@Override
 		public void processKeyEvent(KeyEvent ev) {
-			/*if(KeyEvent.VK_ENTER == ev.getKeyCode()) {
-				addLineToDisplay();
-			}*/
 			if(Character.isDigit(ev.getKeyChar())) {
-				
 				if(this.getText().length()<1) { // only allows one character to be input
 					super.processKeyEvent(ev);
-					if(ev.getID() == KeyEvent.KEY_TYPED) // i wanted to use the release ID for this but apparently that doesnt occur???/
-					this.transferFocus();
+					if(ev.getID() == KeyEvent.KEY_TYPED) // 400 -- i wanted to use the release ID for this but apparently that doesnt occur???/
+					this.transferFocus(); // goes to next input box
 				}
 				
 			}

@@ -1,6 +1,10 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -10,34 +14,16 @@ public class Sudoku {
 		ArrayList<Row> myRows;
 		ArrayList<Column> myColumns;
 		ArrayList<Cell> allCells;
-		int rowIterator;
 		
 		public Sudoku() {
 			this.myBoxes = new ArrayList<Box>();
 			this.myRows = new ArrayList<Row>();
 			this.myColumns = new ArrayList<Column>();
 			this.allCells = new ArrayList<Cell>();
-			rowIterator = 0;
 			// make all new rows collumns, boxes and squares, then organise em
 			create();
 			makeAllCells();
 			sortCells();
-		}
-		
-		public void presetInput() { // for testing purposes mainly.
-			int[][] input =              
-					{ { 0, 0, 6,   0, 3, 1,   0, 7, 0,},
-		              { 4, 3, 7,   0, 0, 5,   0, 0, 0,},
-		              { 0, 1, 0,   4, 6, 7,   0, 0, 8,},
-		                
-		              { 0, 2, 9,   1, 7, 8,   3, 0, 0,},
-		              { 0, 0, 0,   0, 0, 0,   0, 2, 6,},
-		              { 3, 0, 0,   0, 5, 0,   0, 0, 0,},
-		                
-		              { 8, 0, 5,   0, 0, 4,   9, 1, 0,},
-		              { 0, 0, 3,   5, 0, 9,   0, 8, 7,},
-		              { 7, 9, 0,   0, 8, 6,   0, 0, 4,} };
-		this.sudoku = input;
 		}
 		
 		public void create() { // makes 9 of all em, then adds them to their respective lists
@@ -60,19 +46,20 @@ public class Sudoku {
 				}
 			}
 		}
+		
 		public void sortCells() {  // assign squares to cols rows and boxes, and vice-versa
 			for(Cell s : this.allCells) {
 				for(int i = 0; i < 9; i++) {
-					if(s.x == i) {
+					if(s.x == i) { // assign column
 						this.myColumns.get(i).allMyCells.add(s);
 						s.setCol(this.myColumns.get(i));
 					}
-					if(s.y == i) {
+					if(s.y == i) { // assign row
 						this.myRows.get(i).allMyCells.add(s);
 						s.setRow(this.myRows.get(i));
 					}
 				}
-				for( int y = 0; y < 9; y++) {  // math to figure out which box the numbers go into. took me way too long to get this so simple
+				for( int y = 0; y < 9; y++) {  // math to figure out which box the numbers go into.
 					for(int x= 0;x<9; x++) {
 						if(s.x == x&&s.y == y) {
 							int box = 0;
@@ -86,13 +73,14 @@ public class Sudoku {
 								box += 6;
 							}
 							box += x/3;
-							this.myBoxes.get(box).allMyCells.add(s);
+							this.myBoxes.get(box).allMyCells.add(s); // assign box
 							s.myBox = this.myBoxes.get(box);
 						}
 					}
 				}
 			}
 		}
+		
 		public Cell getCellByXY(int x, int y) {
 			for(Cell c : this.allCells) {
 				if(c.x == x && c.y == y) {
@@ -102,20 +90,7 @@ public class Sudoku {
 			return null;
 		}
 		
-		public void addFromInput(String row) {
-			
-			String[] stringArr = row.split("");
-			int[] intArr = new int[9];
-			for(int i = 0; i < 9; i++) {
-				intArr[i] = Integer.parseInt(stringArr[i]);
-			}
-			this.sudoku[rowIterator] = intArr;
-			/*if(rowIterator == 8) {
-				this.solve();
-			}*/
-			rowIterator += 1; // at end to stop out of bounds error
-		}
-		
+		// this function is literally only used now for matts alert box which im not removing
 		public void convertTo2dArray() {
 			for(Row row : this.myRows) {
 				for(int i = 0; i < 9;i++) {
@@ -123,7 +98,7 @@ public class Sudoku {
 				}
 			}
 		}
-		 
+		
 		public void setAllPossibles() {
 			for(Cell s : this.allCells) {
 				if(s.number == 0) {
@@ -149,9 +124,9 @@ public class Sudoku {
 					s.myTextField.setText(String.format("%s", s.number));
 				}
 			}while(singles + hiddenSingles != 0);
-			this.convertTo2dArray();
+			this.convertTo2dArray(); // method for matts alert box
 			
-			System.out.print("test Point");
+			// new alert box to go here 
 		}
 		
 		public String print() {
@@ -171,7 +146,6 @@ public class Sudoku {
 					output.append("\n");
 				}
 			}
-			System.out.print(output.toString());
 			return output.toString();
 			
 		}
