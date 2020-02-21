@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.MenuBar;
 
 import javax.swing.*;
 
@@ -25,11 +26,17 @@ public class Gui extends JFrame{
 	ArrayList<JNumberTextField> allmyTextFields;
 	JPanel panel;
 	JPanel inputPanel;
-	JPanel outputPanel;
 	JLabel inputLabel;
-	JLabel solved;
 	JButton solveBtn;
+	JMenuBar menuBar;
+	JMenu fileMenu;
+	JMenu viewMenu;
+	JMenuItem theme;
+	JMenuItem save;
+	JMenuItem open;
+	JMenuItem exit;
 
+	// constructor
 	public Gui() {
 		this.setSize(600,400);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -37,28 +44,48 @@ public class Gui extends JFrame{
 		this.setVisible(true);
 	}
 	
-	public void setup() {
+	// Gui setup
+	private void setup() {
+		
 		// instantiate variables
 		s = new Sudoku();
 		panel = new JPanel(new BorderLayout());
 		inputPanel = new JPanel();
-		outputPanel = new JPanel(new BorderLayout());
-		inputLabel = new JLabel("type out a line");
-		solved = new JLabel("");
+		inputLabel = new JLabel("");// keep label for future use
 		solveBtn = new JButton("solve!");
+		menuBar = new JMenuBar();
+		fileMenu = new JMenu("File");
+		viewMenu = new JMenu("View");
+		theme = new JMenuItem("Theme");
+		save = new JMenuItem("Save");
+		open = new JMenuItem("Open");
+		exit = new JMenuItem("Exit");
+		
+		// shortcuts
+		fileMenu.setMnemonic('F');
+		viewMenu.setMnemonic('V');
+		save.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S,KeyEvent.CTRL_DOWN_MASK));
+		open.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,KeyEvent.CTRL_DOWN_MASK));
+		theme.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_T, KeyEvent.ALT_DOWN_MASK));
+		
 		// add objects to frame
 		this.getContentPane().add(panel);
+		viewMenu.add(theme);
+		fileMenu.add(save);
+		fileMenu.add(open);
+		fileMenu.add(exit);
+		menuBar.add(fileMenu);
+		menuBar.add(viewMenu);
+		this.setJMenuBar(menuBar);
 		panel.add(inputPanel,BorderLayout.NORTH);
-		panel.add(outputPanel, BorderLayout.CENTER);
+		initializeNumFields();
+		inputOnGui();
 		inputPanel.add(inputLabel);
 		inputPanel.add(solveBtn);
-		outputPanel.add(solved);
+		
 		// add event listeners.
 		ActionListener myListener = new MyActionListener();
 		solveBtn.addActionListener(myListener);		
-		
-		initializeNumFields();
-		inputOnGui();
 	}
 	// loop creating all textfields and assigning them cells.	
 	public void initializeNumFields() {
@@ -86,7 +113,7 @@ public class Gui extends JFrame{
 				p.add(numFields.get(y).get(x));
 			}
 		}
-		this.inputPanel.add(p);
+		this.inputPanel.add(p, CENTER_ALIGNMENT);
 	}
 	public void setTextFieldColor(JNumberTextField box, int x, int y){
 		if(((x < 3 || x > 5) && (y < 3 || y > 5 )) || ((x < 6 && x > 2) && (y < 6 && y > 2))){ // should get the outside corner boxes
@@ -130,6 +157,11 @@ public class Gui extends JFrame{
 		
 		@Override
 		public void processKeyEvent(KeyEvent ev) {
+			ArrayList<Integer> allowedExtraKeys = new ArrayList<Integer>();
+			allowedExtraKeys.add(KeyEvent.VK_ALT);
+			allowedExtraKeys.add(KeyEvent.VK_CONTROL);
+			allowedExtraKeys.add(KeyEvent.VK_ESCAPE);
+			
 			if(Character.isDigit(ev.getKeyChar())) {
 				if(this.getText().length()<1) { // only allows one character to be input
 					super.processKeyEvent(ev);
@@ -140,6 +172,9 @@ public class Gui extends JFrame{
 			else if (ev.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 				if(this.getText().length()>0) // just gets rid of the annoying baloop that windows gives you when deleting an empty field
 				super.processKeyEvent(ev);
+			}
+			else if(allowedExtraKeys.contains(ev.getKeyCode())) {
+				solveBtn.requestFocus();
 			}
 			ev.consume();
 			return;	
