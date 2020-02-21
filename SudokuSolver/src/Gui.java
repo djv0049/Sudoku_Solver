@@ -100,7 +100,7 @@ public class Gui extends JFrame{
 				box.setPreferredSize(new Dimension(20,20));
 				row.add(box);
 				allmyTextFields.add(box);
-				setTextFieldColor(box, x,y);
+				setTextFieldColor(box, x,y, new Color(255,255,255), new Color(200,200,255));
 			}
 			numFields.add(row);
 		}
@@ -115,10 +115,18 @@ public class Gui extends JFrame{
 		}
 		this.inputPanel.add(p, CENTER_ALIGNMENT);
 	}
-	public void setTextFieldColor(JNumberTextField box, int x, int y){
-		if(((x < 3 || x > 5) && (y < 3 || y > 5 )) || ((x < 6 && x > 2) && (y < 6 && y > 2))){ // should get the outside corner boxes
-			box.setBackground(Color.LIGHT_GRAY);
+	public void setTextFieldColor(JNumberTextField box, int x, int y, Color primaryColor, Color secondaryColor){
+		if(((x < 3 || x > 5) && (y < 3 || y > 5 )) || //corner boxes
+				 ((x < 6 && x > 2) && (y < 6 && y > 2))){ //  center box
+			box.setBackground(primaryColor);
 		}
+		else {
+			box.setBackground(secondaryColor);
+		}
+	}
+	
+	public void setTextColor(JTextField box, Color color) {
+		box.setForeground(color);
 	}
 		
 	private class MyActionListener implements ActionListener {
@@ -157,7 +165,7 @@ public class Gui extends JFrame{
 		
 		@Override
 		public void processKeyEvent(KeyEvent ev) {
-			ArrayList<Integer> allowedExtraKeys = new ArrayList<Integer>();
+			ArrayList<Integer> allowedExtraKeys = new ArrayList<Integer>(); // list of exception keys to allow mnemonics to work among other benefits.
 			allowedExtraKeys.add(KeyEvent.VK_ALT);
 			allowedExtraKeys.add(KeyEvent.VK_CONTROL);
 			allowedExtraKeys.add(KeyEvent.VK_ESCAPE);
