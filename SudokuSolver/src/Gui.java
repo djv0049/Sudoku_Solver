@@ -15,13 +15,52 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.lang.reflect.Array;
 public class Gui extends JFrame{
-	Sudoku s;
-	ArrayList<ArrayList<JNumberTextField>> numFields;
-	ArrayList<JNumberTextField> allmyTextFields;
 	// gui to have 81 text fields max input 0ne character, and only numbers. 
 	// each text field to assign value to their corresponding cell
 	
-	// loop creating all textfields and assigning them cells.
+	// initialize class variables 
+	public static Gui gui;
+	Sudoku s;
+	ArrayList<ArrayList<JNumberTextField>> numFields;
+	ArrayList<JNumberTextField> allmyTextFields;
+	JPanel panel;
+	JPanel inputPanel;
+	JPanel outputPanel;
+	JLabel inputLabel;
+	JLabel solved;
+	JButton solveBtn;
+
+	public Gui() {
+		this.setSize(600,400);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setup();
+		this.setVisible(true);
+	}
+	
+	public void setup() {
+		// instantiate variables
+		s = new Sudoku();
+		panel = new JPanel(new BorderLayout());
+		inputPanel = new JPanel();
+		outputPanel = new JPanel(new BorderLayout());
+		inputLabel = new JLabel("type out a line");
+		solved = new JLabel("");
+		solveBtn = new JButton("solve!");
+		// add objects to frame
+		this.getContentPane().add(panel);
+		panel.add(inputPanel,BorderLayout.NORTH);
+		panel.add(outputPanel, BorderLayout.CENTER);
+		inputPanel.add(inputLabel);
+		inputPanel.add(solveBtn);
+		outputPanel.add(solved);
+		// add event listeners.
+		ActionListener myListener = new MyActionListener();
+		solveBtn.addActionListener(myListener);		
+		
+		initializeNumFields();
+		inputOnGui();
+	}
+	// loop creating all textfields and assigning them cells.	
 	public void initializeNumFields() {
 		this.numFields = new ArrayList<ArrayList<JNumberTextField>>();
 		allmyTextFields = new ArrayList<Gui.JNumberTextField>();
@@ -40,9 +79,8 @@ public class Gui extends JFrame{
 		}
 	}
 	
-	public void inputOnGui() { 
+	public void inputOnGui() {  // Add all text fields to panels
 		JPanel p = new JPanel(new GridLayout(9, 9));
-		
 		for(int y = 0 ; y < 9; y++) {
 			for(int x = 0; x<9 ; x++) {
 				p.add(numFields.get(y).get(x));
@@ -55,123 +93,18 @@ public class Gui extends JFrame{
 			box.setBackground(Color.LIGHT_GRAY);
 		}
 	}
-	
-	// initialize class variables 
-	public static Gui gui;
-	JPanel panel;
-	JPanel inputPanel;
-	JPanel outputPanel;
-	JLabel inputLabel;
-	JLabel solved;
-	JButton solveBtn;
-
-	
-	public Gui() {
-		this.setSize(600,400);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setup();
-		this.setVisible(true);
 		
-	}
-	
-	public void setup() {
-		// instantiate variables
-		s = new Sudoku();
-		panel = new JPanel(new BorderLayout());
-		inputPanel = new JPanel();
-		outputPanel = new JPanel(new BorderLayout());
-		inputLabel = new JLabel("type out a line");
-		solved = new JLabel("");
-		solveBtn = new JButton("solve!");
-		
-		// add objects to frame
-		this.getContentPane().add(panel);
-		panel.add(inputPanel,BorderLayout.NORTH);
-		panel.add(outputPanel, BorderLayout.CENTER);
-		inputPanel.add(inputLabel);
-		inputPanel.add(solveBtn);
-		outputPanel.add(solved);
-		
-		
-		// add event listeners.
-		ActionListener myListener = new MyActionListener();
-		solveBtn.addActionListener(myListener);
-		/*inputTxt.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				addLineToDisplay();				
-			}
-		});*/		
-		initializeNumFields();
-		inputOnGui();
-	}
-	/*
-	 * need to change how all this works so it just returns a string for the alert box
-	 */
-	
-	public void printSudokuLine(String row, JLabel l) {
-		String[] s = row.split("(?<=\\G...)");
-		String result = "";
-		if(l.getText().length() == 0 ) {
-			result = "<html><p>";
-		}
-		for(String i : s) {
-			i = i.replaceAll(".(?!$)", "$0 | ");
-			result += i;
-			result += " &nbsp&nbsp&nbsp ";
-		}
-		result +="<br/>";
-		result += "</p></html>";
-		System.out.print(l.getText().length());
-		if(l.getText().length() > 0) {
-			result = l.getText().replaceAll("</p></html>",result);
-		}
-		System.out.print(result);
-		int lineCount = result.split("<br/>").length;
-		if(lineCount == 4 || lineCount == 8) {
-			result = 
-					result.replaceAll("</p></html>", "  <br/></p></html>");
-		}
-		if(lineCount <= 12) {
-			l.setText(result);	
-		}
-	}
-	
-	
-	// method to convert solved solution to string so it can be passed to method that will display it
-	// and then passed to the alert box
-	public void showResult() {
-		this.s.convertTo2dArray();
-		String outputLine = "";
-		for(int[] y : s.sudoku) {
-			outputLine = "";
-			for(int x : y) {
-				outputLine += x;
-			}
-			printSudokuLine(outputLine, solved);
-		}
-		String f = solved.getText();
-		solved.setText("");
-		JFrame alertBox = new JFrame();
-		JOptionPane.showMessageDialog(alertBox, "this is an alertBox with your solution\n" + f,"Messgae",0 );
-		
-		
-	}
-	
-	
-	
 	private class MyActionListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(e.getSource()==solveBtn) {
 				s.solve();
-				showResult();
+				JFrame alertBox = new JFrame();
+				JOptionPane.showMessageDialog(alertBox, s.print());
 			}
 		}
 	}
 
-
-	
 	private class JNumberTextField extends JTextField{ // new class to cover number only entry on specific feilds
 		Cell myCell;
 		JNumberTextField thisTxt;
@@ -180,7 +113,6 @@ public class Gui extends JFrame{
 			thisTxt = this;
 			this.setHorizontalAlignment(JNumberTextField.CENTER);
 			this.addFocusListener(new FocusListener() { // sets myCell to the text value when focus shifts
-				
 				@Override
 				public void focusLost(FocusEvent e) {
 					if(thisTxt.getText().length() > 0)
@@ -188,13 +120,10 @@ public class Gui extends JFrame{
 					else if(thisTxt.getText().length() == 0) {
 						myCell.number = 0;
 					}
-					
 				}
-				
 				@Override
 				public void focusGained(FocusEvent e) {
-					// TODO Auto-generated method stub
-					
+					// TODO Auto-generated 
 				}
 			});
 		}
@@ -207,7 +136,6 @@ public class Gui extends JFrame{
 					if(ev.getID() == KeyEvent.KEY_TYPED) // 400 -- i wanted to use the release ID for this but apparently that doesnt occur???/
 					this.transferFocus(); // goes to next input box
 				}
-				
 			}
 			else if (ev.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
 				if(this.getText().length()>0) // just gets rid of the annoying baloop that windows gives you when deleting an empty field
@@ -216,29 +144,5 @@ public class Gui extends JFrame{
 			ev.consume();
 			return;	
 		}
-		
-		
 	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

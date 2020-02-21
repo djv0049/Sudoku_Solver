@@ -1,12 +1,5 @@
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class Sudoku {
 		int sudoku[][] = new int[9][9];
@@ -90,15 +83,6 @@ public class Sudoku {
 			return null;
 		}
 		
-		// this function is literally only used now for matts alert box which im not removing
-		public void convertTo2dArray() {
-			for(Row row : this.myRows) {
-				for(int i = 0; i < 9;i++) {
-					this.sudoku[row.number][i] = row.allMyCells.get(i).number;
-				}
-			}
-		}
-		
 		public void setAllPossibles() {
 			for(Cell s : this.allCells) {
 				if(s.number == 0) {
@@ -124,9 +108,6 @@ public class Sudoku {
 					s.myTextField.setText(String.format("%s", s.number));
 				}
 			}while(singles + hiddenSingles != 0);
-			this.convertTo2dArray(); // method for matts alert box
-			
-			// new alert box to go here 
 		}
 		
 		public String print() {
